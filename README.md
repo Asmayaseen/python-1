@@ -12,7 +12,7 @@ Data Sweeper ek Streamlit-based web app hai jo users ko CSV aur Excel files uplo
 
 📂 Installation & Setup
 1️⃣ Clone this repository:
-git clone https://github.com/your-username/data-sweeper.git  
+git clone https://github.com/Asmayaseen/python-1.git  
 cd data-sweeper  
 
 2️⃣ Create and activate a virtual environment:
