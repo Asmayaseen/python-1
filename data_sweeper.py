@@ -1,19 +1,18 @@
 import streamlit as st
 import pandas as pd
 import os
-import logging
 from io import BytesIO
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
+# Configure Streamlit page
+st.set_page_config(page_title="Data Sweeper - By Asma Khan", layout="wide")
 
-# Streamlit page setup
-st.set_page_config(page_title="Data Sweeper", layout="wide")
+# Dark/Light Mode Toggle
+mode = st.sidebar.radio("Select Mode:", ["Dark Mode", "Light Mode"])
 
-# Custom CSS for Dark Mode UI
-st.markdown("""
+# Custom CSS for themes
+dark_mode_css = """
     <style>
-        .main { background-color: #121212; }
+        .main { background-color: #121212; color: white; }
         .block-container {
             padding: 2rem;
             border-radius: 10px;
@@ -21,19 +20,31 @@ st.markdown("""
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
         h1, h2, h3, h4, h5, h6 { color: #66c2ff; }
-        .stButton>button {
-            background-color: #0078D7; color: white;
-            border-radius: 8px; padding: 0.75rem 1.5rem;
-            font-size: 1rem; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
-        }
-        .stButton>button:hover { background-color: #005a9e; cursor: pointer; }
-        .stDataFrame, .stTable { border-radius: 10px; overflow: hidden; }
+        .stButton>button { background-color: #0078D7; color: white; }
         .stDownloadButton>button { background-color: #28a745; color: white; }
-        .stDownloadButton>button:hover { background-color: #218838; }
     </style>
-""", unsafe_allow_html=True)
+"""
 
-st.title("🚀 Advanced Data Sweeper")
+light_mode_css = """
+    <style>
+        .main { background-color: #ffffff; color: black; }
+        .block-container {
+            padding: 2rem;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        h1, h2, h3, h4, h5, h6 { color: #0078D7; }
+        .stButton>button { background-color: #0078D7; color: white; }
+        .stDownloadButton>button { background-color: #28a745; color: white; }
+    </style>
+"""
+
+# Apply CSS based on mode
+st.markdown(dark_mode_css if mode == "Dark Mode" else light_mode_css, unsafe_allow_html=True)
+
+# App title
+st.title("🚀 Advanced Data Sweeper - By Asma Khan")
 st.write("Upload and clean your files (CSV or Excel), visualize data, and convert formats easily!")
 
 # Sidebar options
@@ -58,20 +69,15 @@ if uploaded_files:
                 st.error(f"⚠️ Unsupported file type: {file_extension}")
                 continue
 
-            # Get file size safely
-            file.seek(0, os.SEEK_END)  
-            file_size = file.tell() / 1024  
-            file.seek(0)  
-
             # Display file info
             st.write(f"**📄 File Name:** {file.name}")
-            st.write(f"**📏 File Size:** {file_size:.2f} KB")
-
+            st.write(f"**📏 File Size:** {file.size / 1024:.2f} KB")
+            
             # Show data preview
             st.write("🔍 **Preview of the Uploaded File:**")
             st.dataframe(df.head())
 
-            # Data Cleaning Options (inside an expander)
+            # Data Cleaning Options
             with st.expander("🛠 Data Cleaning Options", expanded=False):
                 col1, col2 = st.columns(2)
                 
