@@ -100,7 +100,16 @@ if uploaded_files:
             # Visualization Options
             with st.expander("📊 Data Visualization", expanded=False):
                 if st.checkbox(f"Show Visualization for {file.name}"):
-                    st.bar_chart(df.select_dtypes(include='number').iloc[:, :2])
+                    # Convert possible numeric columns (forcefully)
+                    df = df.apply(pd.to_numeric, errors='coerce')
+
+                    # Select numeric columns
+                    numeric_cols = df.select_dtypes(include='number')
+
+                    if not numeric_cols.empty:
+                        st.bar_chart(numeric_cols)
+                    else:
+                        st.warning("⚠️ No numeric columns available for visualization. Try uploading a file with numeric data.")
 
             # File conversion & download
             buffer = BytesIO()
@@ -120,4 +129,4 @@ if uploaded_files:
         except Exception as e:
             st.error(f"❌ Error processing file {file.name}: {e}")
 
-st.success("🎉 All files processed successfully!")
+st.success("🎉 All files processed successfully!")  
